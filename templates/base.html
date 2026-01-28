@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}XLEAP Index Checker{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .blue-channel { background-color: #3b82f6; }
+        .green-channel { background-color: #22c55e; }
+        .dark-channel { background-color: #374151; }
+        .dual-channel { background: linear-gradient(135deg, #3b82f6 50%, #22c55e 50%); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-4xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <a href="/" class="text-xl font-bold text-gray-800">
+                    XLEAP Index Checker
+                </a>
+                <div class="space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-gray-900">Check</a>
+                    <a href="/help" class="text-gray-600 hover:text-gray-900">Help</a>
+                    <a href="/about" class="text-gray-600 hover:text-gray-900">About</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="max-w-4xl mx-auto px-4 pt-4">
+                {% for category, message in messages %}
+                    <div class="p-4 rounded-lg mb-4 {% if category == 'error' %}bg-red-100 text-red-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-auto">
+        <div class="max-w-4xl mx-auto px-4 py-6 text-center text-gray-500 text-sm">
+            <p>XLEAP Index Checker - For NovaSeq X Plus & NextSeq 1000/2000</p>
+            <p class="mt-1">Validates color balance for XLEAP-SBS chemistry</p>
+        </div>
+    </footer>
+</body>
+</html>

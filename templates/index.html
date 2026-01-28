@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}XLEAP Index Checker - Check Color Balance{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Check Index Color Balance</h1>
+        <p class="text-gray-600">
+            Validate your index combinations for XLEAP-SBS chemistry
+        </p>
+    </div>
+
+    <!-- XLEAP Color Reference -->
+    <div class="bg-white rounded-lg shadow-sm border p-6 mb-6">
+        <h2 class="font-semibold text-gray-800 mb-3">XLEAP-SBS Color Channels</h2>
+        <div class="grid grid-cols-4 gap-4 text-center text-sm">
+            <div>
+                <div class="w-10 h-10 mx-auto rounded-lg blue-channel mb-2"></div>
+                <div class="font-mono font-bold">A</div>
+                <div class="text-gray-500">Blue only</div>
+            </div>
+            <div>
+                <div class="w-10 h-10 mx-auto rounded-lg dual-channel mb-2"></div>
+                <div class="font-mono font-bold">C</div>
+                <div class="text-gray-500">Both</div>
+            </div>
+            <div>
+                <div class="w-10 h-10 mx-auto rounded-lg dark-channel mb-2"></div>
+                <div class="font-mono font-bold">G</div>
+                <div class="text-gray-500">Dark</div>
+            </div>
+            <div>
+                <div class="w-10 h-10 mx-auto rounded-lg green-channel mb-2"></div>
+                <div class="font-mono font-bold">T</div>
+                <div class="text-gray-500">Green only</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input Form -->
+    <div class="bg-white rounded-lg shadow-sm border p-6">
+        <form action="/check" method="POST">
+            <div class="mb-4">
+                <label for="indexes" class="block font-semibold text-gray-800 mb-2">
+                    Enter Index Sequences
+                </label>
+                <p class="text-sm text-gray-500 mb-3">
+                    One index per line. Only A, C, G, T characters allowed.
+                </p>
+                <textarea
+                    id="indexes"
+                    name="indexes"
+                    rows="8"
+                    class="w-full px-4 py-3 border rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="ATCGATCG
+GCTAGCTA
+TTAACCGG
+CGATCGAT"
+                ></textarea>
+            </div>
+
+            <button
+                type="submit"
+                class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            >
+                Check Color Balance
+            </button>
+        </form>
+    </div>
+
+    <!-- Quick Tips -->
+    <div class="mt-6 bg-gray-100 rounded-lg p-4 text-sm text-gray-600">
+        <p class="font-semibold mb-2">Quick Tips:</p>
+        <ul class="list-disc list-inside space-y-1">
+            <li>Each position needs at least one blue (A or C) and one green (C or T) signal</li>
+            <li>Avoid all G's at any position - G produces no signal</li>
+            <li>C is the safest base - it provides both blue and green signal</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

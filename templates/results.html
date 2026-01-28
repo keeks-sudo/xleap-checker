@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Results - XLEAP Index Checker{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <!-- Result Summary -->
+    <div class="mb-6 p-6 rounded-lg {% if result.is_valid %}bg-green-50 border border-green-200{% else %}bg-red-50 border border-red-200{% endif %}">
+        <div class="flex items-center mb-2">
+            {% if result.is_valid %}
+                <svg class="w-8 h-8 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <h1 class="text-2xl font-bold text-green-800">PASS</h1>
+            {% else %}
+                <svg class="w-8 h-8 text-red-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <h1 class="text-2xl font-bold text-red-800">FAIL</h1>
+            {% endif %}
+        </div>
+        <p class="{% if result.is_valid %}text-green-700{% else %}text-red-700{% endif %}">
+            {{ result.summary }}
+        </p>
+    </div>
+
+    <!-- Warnings -->
+    {% if result.warnings %}
+    <div class="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <h2 class="font-semibold text-yellow-800 mb-2">Warnings & Recommendations</h2>
+        <ul class="space-y-2">
+            {% for warning in result.warnings %}
+            <li class="flex items-start text-yellow-700">
+                <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+                {{ warning }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Input Indexes -->
+    <div class="mb-6 bg-white rounded-lg shadow-sm border p-4">
+        <h2 class="font-semibold text-gray-800 mb-3">Input Indexes ({{ indexes|length }})</h2>
+        <div class="font-mono text-sm bg-gray-50 p-3 rounded">
+            {% for idx in indexes %}
+            <div>{{ idx }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Position-by-Position Analysis -->
+    <div class="bg-white rounded-lg shadow-sm border p-6">
+        <h2 class="font-semibold text-gray-800 mb-4">Position-by-Position Analysis</h2>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b">
+                        <th class="px-3 py-2 text-left">Position</th>
+                        <th class="px-3 py-2 text-left">Bases</th>
+                        <th class="px-3 py-2 text-center">Blue</th>
+                        <th class="px-3 py-2 text-center">Green</th>
+                        <th class="px-3 py-2 text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in table %}
+                    <tr class="border-b {% if not row.is_balanced %}bg-red-50{% endif %}">
+                        <td class="px-3 py-3 font-mono font-bold">{{ row.position }}</td>
+                        <td class="px-3 py-3">
+                            <div class="flex space-x-1">
+                                {% for base in row.bases %}
+                                <span class="w-6 h-6 flex items-center justify-center rounded text-white text-xs font-bold
+                                    {% if base == 'A' %}blue-channel
+                                    {% elif base == 'C' %}dual-channel
+                                    {% elif base == 'G' %}dark-channel
+                                    {% else %}green-channel{% endif %}">
+                                    {{ base }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </td>
+                        <td class="px-3 py-3 text-center">
+                            {% if row.has_blue %}
+                                <span class="text-blue-600 font-bold">{{ row.blue_count }}</span>
+                            {% else %}
+                                <span class="text-red-500">0</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-3 py-3 text-center">
+                            {% if row.has_green %}
+                                <span class="text-green-600 font-bold">{{ row.green_count }}</span>
+                            {% else %}
+                                <span class="text-red-500">0</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-3 py-3 text-center">
+                            {% if row.is_balanced %}
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    OK
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                    FAIL
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Check Another -->
+    <div class="mt-6 text-center">
+        <a href="/" class="inline-block bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+            Check Another Set
+        </a>
+    </div>
+</div>
+{% endblock %}
